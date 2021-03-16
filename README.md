@@ -8,7 +8,7 @@ This is a public key cryptosystem, that uses block encryption and encrypts one b
 and its properties to calculate the public key and private key. This is used for school, so the functionality will print to screen
 as well as send it to external files, so keep in mind when running.
 
-Public-key Cryptosystem uses a 33 bit prime and a 32 bit message, ensuring that the prime is always larger than the message.
+Public-key Cryptosystem uses a 33 bit prime and encrypts in 32 bit blocks, ensuring that the prime is always larger than the plaintext.
 
 This project will be in Python3
 

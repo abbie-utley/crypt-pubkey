@@ -37,41 +37,65 @@ def encryption():
   
   #opens ptext.txt and puts the string literal in hold2
   f3 = open("ptext.txt", "r")
-  hold2 = f3.read()
+  pTextS = f3.read()
   f3.close()
+
+  #count how many times to encrypt
+  iterations = (len(pTextS) // 4)
+  if (iterations % 4) != 0:
+    iterations += 1
+  y = 1
+
+  #clear the ciphertext file before appending
+  fileclear = open("ctext.txt", "w")
+  fileclear.close()
   
-  #initializing a list called pTextL for the manipulation of plaintext
-  pTextL = []
+  #put the encryption into a loop
+  for x in range(iterations):
 
-  #put the number version in the list then turn it into an 8bit number 
-  for i in range(4):
-    pTextL.append(ord(hold2[i]))
-    pTextL[i] = format(pTextL[i], '08b')
+    #make hold2 = te four letters I want
+    if x == (iterations-1):
+      hold2 = pTextS[(x*4):]
+    else: 
+      hold2 = pTextS[(x*4):(y*4)]
 
-  #join list into one string
-  pText = "".join(pTextL)
+    #initializing a list called pTextL for the manipulation of plaintext
+    pTextL = []
 
-  #take the binary string and convert to number
-  pText = int(pText, 2)
+    #put the number version in the list then turn it into an 8bit number 
+    for i in range(4):
+      pTextL.append(ord(hold2[i]))
+      pTextL[i] = format(pTextL[i], '08b')
 
-  #r = random number from 1 to p-1
-  #c1 = g^d mod p
-  #c2 = (plaintext * e2^r) mod p
-  randomR = random.randrange(1, pValue-1)
-  c1 = pow(e1Value, randomR, pValue)
-  c2 = pow((pow(pText, 1, pValue) * pow(e2Value, randomR, pValue)), 1, pValue)
+    #join list into one string
+    pText = "".join(pTextL)
 
-  #need 33 bits for c1 and c2
-  c1 = format(c1, '033b')
-  c2 = format(c2, '033b')
+    #take the binary string and convert to number
+    pText = int(pText, 2)
 
-  #cText = the concatenation of c1 and c2
-  #print the number version to the shell for easier grading purposes
-  cText = str(c1) + str(c2)
-  cTextNum = str(int(c1, 2)) + str(int(c2, 2))
-  print("\nplaintext: " + hold2 + "\ncipertext: " + cTextNum)
-  
-  #open ctext.txt and write the ciphertext to the file
-  f4 = open("ctext.txt", "w")
-  f4.write(cText)
-  f4.close()
+    #r = random number from 1 to p-1
+    #c1 = g^d mod p
+    #c2 = (plaintext * e2^r) mod p
+    randomR = random.randrange(1, pValue-1)
+    c1 = pow(e1Value, randomR, pValue)
+    c2 = pow((pow(pText, 1, pValue) * pow(e2Value, randomR, pValue)), 1, pValue)
+
+    #need 33 bits for c1 and c2
+    c1 = format(c1, '033b')
+    c2 = format(c2, '033b')
+
+    #cText = the concatenation of c1 and c2
+    #print the number version to the shell for easier grading purposes
+    cText = str(c1) + str(c2)
+    cTextNum = str(int(c1, 2)) + str(int(c2, 2))
+    print("\nplaintext: " + hold2 + "\ncipertext: " + cTextNum)
+    
+    #open ctext.txt and append the ciphertext to the file
+    f4 = open("ctext.txt", "a")
+    f4.write(cText)
+    f4.close()
+
+    #iterate y:
+    y += 1
+    #clear out list
+    pTextL.clear()

@@ -1,1 +1,1 @@
-late
+The value of the elements in x was not changed, because the for loop variable represents only a copy of the value of the corresponding element in the sequence, not the actual element itself. Notice that if the elements of the sequence being iterated over are mutable objects, then element

@@ -4,14 +4,12 @@
 def decryption():
   #opens the ctext.txt file and reads it into a value called cText
   f = open("ctext.txt", "r")
-  cText = f.read()
+  cTextS = f.read()
   f.close()
 
-  #c1 is the first half of the ciphertext and c2 is the second half
-  c1 = cText[:33]
-  c1 = int(c1, 2)
-  c2 = cText[33:]
-  c2 = int(c2, 2)
+  #clear the file
+  fileopen = open("dtext.txt", "w")
+  fileopen.close()
 
   #just like ec.py it opens the pubkey.txt file and reads in the string
   #then parses it to pValue, g, and e2
@@ -35,26 +33,44 @@ def decryption():
   numList2 = list(numMap2)
   dValue = numList2[2]
 
-  #hold = (c2 * c1^(p-1-d)) mod p
-  hold = pow(pow(int(c2), 1, pValue) * pow(int(c1), (pValue - 1 - dValue), pValue), 1, pValue)
- 
-  #change hold to be a 32 bit number (including the 0)
-  #split the value into 4 even chunks
-  #turn the int into a base 2 int
-  #then convert the value into a letter
-  pTextL = []
-  hold = format(hold, '032b')
-  for i in range(4):
-    pTextL.append(hold[:8])
-    hold = hold[8:]
-    pTextL[i] = int(pTextL[i], 2)
-    pTextL[i] = chr(pTextL[i])
+  iterations = (len(cTextS)) // 66
+  z = 1
 
-  #join the list of letters together to form a word
-  pText = "".join(pTextL)
-  print("plaintext decrypted: " + pText)
+  for x in range(iterations):
+    cText = cTextS[(x*66):(z*66)]
 
-  #open the file dtext.txt and write the decrypted plaintext to it
-  f4 = open("dtext.txt", "w")
-  f4.write(pText)
-  f4.close()
+    #c1 is the first half of the ciphertext and c2 is the second half
+    c1 = cText[:33]
+    c1 = int(c1, 2)
+    c2 = cText[33:]
+    c2 = int(c2, 2)
+
+
+    #hold = (c2 * c1^(p-1-d)) mod p
+    hold = pow(pow(int(c2), 1, pValue) * pow(int(c1), (pValue - 1 - dValue), pValue), 1, pValue)
+   
+    #change hold to be a 32 bit number (including the 0)
+    #split the value into 4 even chunks
+    #turn the int into a base 2 int
+    #then convert the value into a letter
+    pTextL = []
+    hold = format(hold, '032b')
+    for i in range(4):
+      pTextL.append(hold[:8])
+      hold = hold[8:]
+      pTextL[i] = int(pTextL[i], 2)
+      pTextL[i] = chr(pTextL[i])
+
+    #join the list of letters together to form a word
+    pText = "".join(pTextL)
+    print("plaintext decrypted: " + pText)
+
+    #open the file dtext.txt and write the decrypted plaintext to it
+    f4 = open("dtext.txt", "a")
+    f4.write(pText)
+    f4.close()
+
+    #increment y and z
+    z += 1
+    #clear out pTextL
+    pTextL.clear()
